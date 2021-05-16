@@ -34,7 +34,7 @@
                       type="checkbox" 
                       value="{{ tag.id }}" 
                       id="tag{{ tag.id }}"
-                      name="tags">
+                      name="tags"{% if tag.this_post_has %} checked{% endif %}>
                 <label 
                       class="form-check-label btn btn-outline-warning btn-sm py-0 my-0" 
                       for="tag{{ tag.id }}">

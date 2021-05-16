@@ -111,6 +111,7 @@ def edited_user_to_database(user_id):
 
     return redirect(f'../user/{user.id}')
 
+# TODO: delete is violating a constraint on table posts or some shit like that
 @app.route('/delete-user/<int:user_id>')
 def delete_this_user(user_id):
     User.query.filter_by(id=user_id).delete()
@@ -158,6 +159,11 @@ def edit_a_post(post_id):
     post = Post.query.get(post_id)
     user = User.query.get(post.user_id)
     tags = Tag.query.all()
+    post_tags = PostTag.get_tags_for_post(post)
+    for post_tag in post_tags: 
+        post_tag.this_post_has = True
+    db.session.add_all(tags)
+    db.session.commit()
     return render_template('edit-post.html', post=post, tags=tags, user=user)
 
 # TODO tags aren't getting in the database
@@ -198,6 +204,13 @@ def process_edited_post_and_display(post_id):
     # db.session.add_all(tags)
     db.session.commit()
 
+    # reset Tag.this_post_has to default on all tags:
+    tags = Tag.query.all()
+    for tag in tags:
+        tag.this_post_has = False
+
+    db.session.add_all(tags)
+    db.commit()
     # re_got_tag_ids = PostTag.query.filter(PostTag.post_id == post_id).all()
     # re_got_tags = []
     # for tag_id in re_got_tag_ids:
@@ -209,7 +222,7 @@ def process_edited_post_and_display(post_id):
 def display_post_by_id(post_id):
     """ display a post by it's primary key id """
     post = Post.query.get_or_404(post_id)
-    tags = PostTag.list_tags_for_one_post(post)
+    tags = PostTag.get_tags_for_post(post)
     user = User.query.get(post.user_id)
     
     return render_template('post.html', post=post, tags=tags, user=user)

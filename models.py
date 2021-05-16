@@ -31,7 +31,7 @@ class User(db.Model):
     statement_short = db.Column(db.String(42))
     full_name = db.Column(db.String(41))
 
-    posts = db.relationship("Post", backref="user", cascade="all, delete-orphan")
+    posts = db.relationship("Post", backref="user", cascade="all, delete")
 
 
     @property
@@ -68,6 +68,7 @@ class Post(db.Model):
                 db.ForeignKey('users.id'))
     pretified_creation_datetime = db.Column(db.String(31), default="")
 
+    posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
 
@@ -97,7 +98,7 @@ class Tag(db.Model):
     def __repr__(self):
         """show info about the tag"""
         t = self
-        return f"{t.id} '{t.tag}'"
+        return f"{t.id} '{t.tag}' {t.this_post_has}"
 
     id = db.Column(db.Integer,
                 primary_key = True,
@@ -105,6 +106,7 @@ class Tag(db.Model):
     tag = db.Column(db.String(26),
                 nullable=False,
                 unique=True)
+    this_post_has = db.Column(db.Boolean, default=False)
 
     posts = db.relationship(
         'Post',
@@ -138,6 +140,23 @@ class PostTag(db.Model):
         for post in posts:
             tags_keyed_to_post.append({post: cls.list_tags_for_one_post(post)})
 
+        return tags_keyed_to_post
+
+    @classmethod
+    def get_tags_for_post(cls, post):
+        post_tags = cls.query.all()
+        ret_tags = []
+        for post_tag in post_tags:
+            if post_tag.post_id == post.id:
+                tag_in_post = Tag.query.get(post_tag.tag_id)
+                ret_tags.append(tag_in_post)
+        return ret_tags
+
+    @classmethod
+    def get_tags_for_multiple_posts(cls, posts):
+        tags_keyed_to_post = []
+        for post in posts:
+            tags_keyed_to_post.append({post: cls.get_tags_for_post(post)})
         return tags_keyed_to_post
 
     post_id = db.Column(db.Integer,
