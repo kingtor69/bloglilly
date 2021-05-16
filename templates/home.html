@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block tab_title %}Bloglilly{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block header %}Bloglilly&hellip;? &nbsp; Strange name, but why not?{% endblock %}
+{% block content %}
+  <div class="container">
+    <br>
+    <table class="table table-dark table-striped">
+      <thead class="bg-primary">
+        <tr>
+          <th colspan="4" class="text-center">
+            <h2>Most Recent Posts</h2>
+          </th>
+          <th>
+            <a href="/posts" class="btn btn-success">see more posts</a>
+          </th>
+        </tr>
+        <tr>
+          <th>date (click to view full post)</th>
+          <th>author</th>
+          <th>title</th>
+          <th>partial text</th>
+          <th>tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post_key in posts_with_tags %}
+          <tr>
+            {% for post, (tags, author) in post_key.items() %}
+              <td><a class="text-success" href="/post/{{ post.id }}">{{ post.pretified_creation_datetime }}</a></td>
+              <td><a class="text-primary" href="/user/{{ author.id }}">{{ author.full_name }}</a></td>
+              <td>{{ post.title }}</td>
+              <td>{{ post.content_short }}</td>
+              <td>
+                {% for tag in tags %}
+                  <a href="../../tag/{{ tag }}" class="btn btn-outline-warning btn-sm py-0 mx-0">{{ tag }}</a>
+                {% endfor %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <table class="table table-dark table-striped">
+      <thead class="bg-success">
+        <tr class="d-flex">
+          <th class="text-center col-9"><h2>Newest Posters</h2></th>
+          <th class="col-3"><a href="/users" class="btn btn-primary">see more posters</a></th>
+        </tr>
+        <tr class="d-flex">
+          <th class="col-2">Poster's name</th>
+          <th class="col-5">about</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
+          <th class="col-3"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr class="d-flex">
+          <td class="col-2"><a href="/user/{{ user.id }}" class="text-primary">{{ user.full_name }}</a></td>
+          {% if user.statement_short %}
+            <td class="col-7">{{ user.statement_short }}</td>
+          {% else %}
+            <td class="col-7"></td>
+          {% endif %}
+            <!-- <td class="col-2"><a href="/edit-user/{{ user.id }}" class="btn btn-outline-primary btn-sm py-0 my-0">edit user</a></td> -->
+            <!-- if this were a real blog site, this whole column would only exist if the logged-in user was in this list, and the button would only be for the logged-in user -->
+            <td class="col-3"><a href="/user/{{ user.id }}/new-post" class="btn btn-success btn-sm py-0 my-0">new post from {{ user.full_name }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

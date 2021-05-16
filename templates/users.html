@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block tab_title %}bloggers{% endblock %}
+{% block header %}{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block content %}
+  <div class="container">
+    <table class="table table-dark table-striped">
+      <thead class="bg-success">
+        <tr>
+          <th colspan="3" class="text-center">Bloglilly Posters</th>
+        </tr>
+        <tr>
+          <th>poster</th>
+          <th>statement</th>
+          <th></th>
+          <!-- <th>most recent post</th> -->
+        </tr>
+      </thead>
+      {% for user in users %}
+        <tr>  
+          <td><a href="./user/{{user.id}}">{{user.full_name}}</a></td>
+          <td colspan="2">{{user.statement_medium}}</td>
+          <!-- 
+            <td><i>anchor button to posts by user</i></td>
+            <td><i>most recent post will be here</i></td> -->
+        </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <a href="./new-user" class="btn btn-outline btn-primary">add new user</a>
+  </div>
+{% endblock %}

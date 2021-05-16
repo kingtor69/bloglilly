@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block tab_title %}edit tag{% endblock %}
+{% block header %}Edit Tag{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block content %}
+  <div class="container">
+    <form action="../tag-edit/{{ tag.id }}" method="POST">
+        <div class="row d-none">
+          <input type="number" class="form-control dark-input" id="tag-id" name="tag-id" aria-hidden="true" value="{{ tag.id }}">
+        </div>
+      <div class="row">
+        <div class="col col-6 col-md-4 col-lg-3">
+          <div class="form-group">
+            <label for="tag">tag name <sup>*</sup></label>
+            <input type="text" class="form-control dark-input" id="tag" 
+              {% if tag.tag %}
+                value="{{ tag.tag }}"
+              {% else %}
+                placeholder = "tag name"
+              {% endif %}  
+              name="tag">
+            <small class="form-text text-muted"><sup>*</sup> required field</small>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+          <button type="submit" class="btn btn-primary">submit tag</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

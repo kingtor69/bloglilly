@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block tab_title %}blog tags{% endblock %}
+{% block header %}{% endblock %}
+{% block home_path %}../../../{% endblock %}
+{% block users_path %}../../../{% endblock %}
+{% block posts_path %}../../../{% endblock %}
+{% block tags_path %}../../../{% endblock %}
+{% block static_route %}../../../{% endblock %}
+{% block content %}
+  <div class="container">
+    <table class="table table-dark table-striped">
+      <thead class="bg-success">
+        <tr>
+          <th colspan="3" class="text-center"><h1>Tags</h1></th>
+        </tr>
+        <tr>
+          <th>tag</th>
+          <th>show posts</th>
+          <th>edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.tag }}</td>
+                <td><a class="btn btn-primary btn-sm py-0 my-0" href="/posts-by-tag/{{ tag.id }}">show posts with this tag</a></td>
+                <td><a class="btn btn-info btn-sm py-0 my-0" href="/tag-edit/{{ tag.id }}">edit this tag</a></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><a href="../new-tag" class="btn btn-info">add a new tag</a></td>
+            <td> </td>
+            <td> </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

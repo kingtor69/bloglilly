@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block tab_title %}post{% endblock %}
+{% block home_path %}../../{% endblock %}
+{% block users_path %}../../{% endblock %}
+{% block posts_path %}../../{% endblock %}
+{% block tags_path %}../../{% endblock %}
+{% block static_route %}../../{% endblock %}
+{% block header %}
+  {% if post.title %} 
+    {{ post.title }}
+  {% else %}
+    Post #{{ post.id }}
+  {% endif %}
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3 class="border rounded border-success bg-dark px-5 py-3 m-3">{{ post.content }}</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p class="px-5 mx-3">writen by <b>{{ user.full_name }}</b>&nbsp;<i>on {{ post.pretified_creation_datetime }}</i></p>
+      </div>
+      <div class="col">
+        <a href="../../edit-post/{{ post.id }}" class="btn btn-info btn-sm py-0 my-0">edit this post</a>
+      </div>
+      <div class="col">
+        <a href="../../delete-post/{{ post.id }}" class="btn btn-danger btn-sm py-0 my-0">delete this post</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <table class="table table-dark">
+          <tbody>
+            <tr>
+              <td>
+                tags: &nbsp;
+                {% for tag in tags %}
+                  <a href="../../tag/{{ tag.id }}" class="btn btn-outline-warning btn-sm py-0 mx-0">{{ tag.tag }}</a>
+                {% endfor %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

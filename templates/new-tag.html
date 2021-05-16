@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block tab_title %}blog tags{% endblock %}
+{% block header %}{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block content %}
+  <div class="container">
+    {% if error %}
+      <div class="row justify-content-center">
+        <div class="col col-md-6 col-lg-4">
+          <p class="bg-warning d-block  border-danger rounded">
+              That tag  already exists in the system<br>
+              please entre a unique tag, or:
+          </p>
+          <a href="/tags" class="btn  btn-outline-warning my-3">look at  existing tags</a>
+        </div>
+      </div>
+    {% endif %}
+    <form action="/new-tag" method="POST">
+        <div class="form-group">
+            <label for="tag">enter new tag:</label>
+            <input type="text" id="tag" name="tag" placeholder="new tag">
+        </div>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block tab_title %}new blogger{% endblock %}
+{% block header %}Bloglilly Users{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block content %}
+  <div class="container">
+    <form action="/new-user" method="POST">
+      <div class="row">
+        <div class="col col-6 col-md-4 col-lg-3">
+          <div class="form-group">
+            <label for="first-name">First (or only) name <sup>*</sup></label>
+            <input type="text" class="form-control dark-input" id="first-name" placeholder="first or only name" name="first-name">
+            <small class="form-text text-muted"><sup>*</sup> required field</small>
+          </div>
+          <br>
+        </div>
+        <div class="col col-6 col-md-4 col-lg-3">
+          <div class="form-group">
+            <label for="last-name">Last name</label>
+            <input type="text" class="form-control dark-input" id="last-name" placeholder="last name" name="last-name">
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-md-8 col-lg-6">
+          <div class="form-group">
+            <label for="image-url">URL link to profile picture</label>
+            <input type="text" class="form-control dark-input" id="image-url" placeholder="profile picture link" name="image-url">
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-md-8 col-lg-6">
+          <div class="form-group">
+            <label for="statement">tell us something about yourself</label>
+            <textarea class="form-control dark-input" name="statement" id="statement" rows="5" placeholder="a little something something about you"></textarea>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col">
+          <button type="submit" class="btn btn-primary">add new user</button>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

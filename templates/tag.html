@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block tab_title %}{{tag.tag}}{% endblock %}
+{% block home_path %}../../{% endblock %}
+{% block users_path %}../../{% endblock %}
+{% block posts_path %}../../{% endblock %}
+{% block tags_path %}../../{% endblock %}
+{% block static_route %}../../{% endblock %}
+{% block page_style %}{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+    {% if not got_one %}
+      <h2>there are no posts with tag "{{ tag.tag }}"</h2>
+      <script>
+        document.write('<a href="' + document.referrer + '" class="btn btn-warning btn-lg">go back</a>')
+      </script>
+    {% else %}
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th colspan="4">
+              <h2>Posts tagged with "{{ tag.tag }}"</h2>
+            </th>
+          </tr>
+          <tr class="d-flex">
+            <th class="col-2">title</th>
+            <th class="col-6">content</th>
+            <th class="col-2"></th>
+            <th class="col-2">creation date/time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+            <tr class="d-flex">
+              <td class="col-2">{{ post.title }}</td>
+              <td class="col-6">{{ post.content }}</td>
+              <td class="col-2"><a href="../post/{{ post.id }}" class="btn btn-outline-info btn-sm">view post page</a></td>
+              <td class="col-2">{{ post.pretified_creation_datetime }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}

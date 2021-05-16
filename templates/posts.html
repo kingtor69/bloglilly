@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block tab_title %}blog posts{% endblock %}
+{% block header %}{% endblock %}
+{% block home_path %}../{% endblock %}
+{% block users_path %}../{% endblock %}
+{% block posts_path %}../{% endblock %}
+{% block tags_path %}../{% endblock %}
+{% block static_route %}../{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <table class="table table-dark table-striped">
+          <thead class="bg-success">
+            <tr>
+              <th colspan="5"><h1>Blog Posts:</h1></th>
+            </tr>
+            <tr>
+              <th>date (click to view full post)</th>
+              <th>author</th>
+              <th>title</th>
+              <th>partial text</th>
+              <th>tags</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
+              <td colspan="4">posts keying tags: {{posts_keying_tags}}</td>
+            </tr> -->
+            {% for post_key in posts_keying_tags %}
+              <tr>
+                {% for post, (tags, author) in post_key.items() %}
+                    <td><a class="text-success" href="/post/{{ post.id }}">{{ post.pretified_creation_datetime }}</a></td>
+                    <td><a href="/user/{{ author.id }}" class="text-primary">{{ author.full_name }}</a></td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.content_short }}</td>
+                    <td>
+                      {% for tag in tags %}
+                        <a href="../../tag/{{ tag }}" class="btn btn-outline-warning btn-sm py-0 mx-0">{{ tag }}</a>
+                      {% endfor %}
+                    </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

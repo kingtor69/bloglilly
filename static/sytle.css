@@ -1,0 +1,48 @@
+/* fit-img-to-block class style adapted from https://stackoverflow.com/users/8850512/zahidul-islam-ruhel (Zahidul Islam Ruthel) at https://stackoverflow.com/a/48483068 */
+
+body {
+	background-color: black;
+	color: white;
+}
+
+/* @media (min-width: 100px) and (max-width: 500px) {
+   .collapse {
+       display: none !important;
+   }
+} */
+
+.fit-img-to-block {
+	width: 100%;
+	object-fit: cover;
+}
+
+.dark-input {
+	background-color: #215;
+	color: white;
+}
+
+.dark-input:active,
+.dark-input:focus {
+	background-color: #325;
+	color: white;
+}
+
+a.table-anchor {
+	color: #87ceeb;
+	text-decoration: none;
+}
+
+a.table-anchor:hover {
+	color: white;
+	text-decoration: underline;
+}
+
+a.table-anchor:visited {
+	color: #87eba0;
+	text-decoration: none;
+}
+
+/* input.content-input {
+	height: 70vh;
+	overflow-wrap: break-word;
+} */

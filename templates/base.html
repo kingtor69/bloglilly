@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block tab_title %}{% endblock %}</title>
+  <meta name="title" content="Survey: Flask tools exercise (19.3.10)">
+  <meta name="author" content="Tor Kingdon">
+  <meta name="description" content="Tor Kingdon's work on Survey exercise all written by Tor Kingdon except where noted">
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/png" href="images/tor-headshot-2019-square.jpg">
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+  <!-- static style -->
+  <link rel="stylesheet" href="/static/sytle.css">
+  {% block page_sytle %}{% endblock %}
+</head>
+<!-- TODO: and a new user direct link, maybe a new post that asks you to select your user...? -->
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top px-3">
+      <a class="navbar-brand" href="{% block home_path %}{% endblock %}">bloglilly</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a href="{% block users_path %}{% endblock %}users" class="nav-link">show users</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% block posts_path %}{% endblock %}posts" class="nav-link">show posts</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% block tags_path %}{% endblock %}tags" class="nav-link">manage tags</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a href="./posts.html" class="nav-link">show posts</a>
+          </li> -->
+          {% block nav_items %}{% endblock %}
+          <!-- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% block dropdown_nav_items %}{% endblock %}
+            <hr>
+            <li class="nav-item">
+              <a href="" class="nav-link">back home</a>
+            </li>
+          </div> -->
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col text-center p-1 m-1 mt-3">
+        <h1 class="text-center">{% block header %}{% endblock %}</h1>
+      </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="row justify-content-center">
+      {% for category, message in messages %}
+      <div class="col text-center">
+        <span class="border border-{{category}} rounded bg-dark p-2">
+          <tag class="m-2 text-{{ category }} font-weight-bold">{{message}}</tag>
+        </span>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+      </div>
+      {% block content %}
+    </div>
+    {% endblock %}
+  </div>
+  <!-- boostrap scripts -->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  {% block scripts_before %}{% endblock %}
+  <script src="{% block scripts_path %}{% endblock %}static/app.js"></script>
+  {% block scripts_after %}{% endblock %}
+</body>
