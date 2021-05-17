@@ -31,8 +31,7 @@ class User(db.Model):
     statement_short = db.Column(db.String(42))
     full_name = db.Column(db.String(41))
 
-    posts = db.relationship("Post", backref="user")
-    parent = relationship('Post', backref=backref('users', cascade='all,delete'))
+    posts = db.relationship("Post", backref="user", cascade="all, delete")
 
 
     @property
@@ -69,8 +68,7 @@ class Post(db.Model):
                 db.ForeignKey('users.id'))
     pretified_creation_datetime = db.Column(db.String(31), default="")
 
-    posts_tags = db.relationship("PostTag", backref="posts", cascade="all, delete")
-    parent = relationship('PostTag', backref=backref('posts', cascade='all,delete'))
+    posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
 
@@ -116,8 +114,6 @@ class Tag(db.Model):
         cascade="all,delete",
         backref="tags",
     )
-    parent = relationship('Tag', backref=backref('posts_tags', cascade='all,delete'))
-    
 
 class PostTag(db.Model):
     """many-to-many reference matching tags with posts"""
