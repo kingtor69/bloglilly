@@ -31,7 +31,7 @@ class User(db.Model):
     statement_short = db.Column(db.String(42))
     full_name = db.Column(db.String(41))
 
-    posts = db.relationship("Post", backref="user", cascade="all, delete")
+    posts = db.relationship("Post", backref="user", passive_deletes=True)
 
 
     @property
@@ -65,10 +65,12 @@ class Post(db.Model):
                 default=datetime.utcnow(),
                 nullable=False)
     user_id = db.Column(db.Integer, 
-                db.ForeignKey('users.id'))
+                db.ForeignKey('users.id',
+                ondelete=CASCADE))
     pretified_creation_datetime = db.Column(db.String(31), default="")
 
-    posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")
+    posts_tags = db.relationship("PostTag", backref="post", passive_deletes=True)
+    parent = db.relationship('Post', backref=backref('users', passive_deletes=True))
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
 
@@ -111,9 +113,11 @@ class Tag(db.Model):
     posts = db.relationship(
         'Post',
         secondary="posts_tags",
-        cascade="all,delete",
+        passive_deletes=True,
         backref="tags",
     )
+    parent = db.relationship('Tag', backref=backref('posts', passive_deletes=True))
+
 
 class PostTag(db.Model):
     """many-to-many reference matching tags with posts"""
@@ -160,10 +164,15 @@ class PostTag(db.Model):
         return tags_keyed_to_post
 
     post_id = db.Column(db.Integer,
-                db.ForeignKey('posts.id'),
+                db.ForeignKey('posts.id',
+                ondelete='CASCADE'),
                 primary_key=True)
     tag_id = db.Column(db.Integer,
-                db.ForeignKey('tags.id'),
+                db.ForeignKey('tags.id',
+                ondelete='CASCADE'),
                 primary_key=True)
 
     primary_key = (post_id, tag_id)
+
+    parent = db.relationship('PostTag', backref=backref('users', passive_deletes=True))
+    parent = db.relationship('PostTag', backref=backref('posts', passive_deletes=True))
