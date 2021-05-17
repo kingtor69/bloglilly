@@ -130,7 +130,8 @@ def edited_user_to_database(user_id):
 # TODO: delete is violating a constraint on table posts or some shit like that
 @app.route('/delete-user/<int:user_id>')
 def delete_this_user(user_id):
-    User.query.filter_by(id=user_id).delete()
+    user = User.query.filter_by(id=user_id)
+    db.session.delete(user)
     db.session.commit()
     return redirect('/users')
 
@@ -263,7 +264,8 @@ def display_all_posts():
 # TODO: this throws and error, I think that delete thing got lost moving to/from studio...?
 @app.route('/delete-post/<int:post_id>')
 def delete_specified_post(post_id):
-    Post.query.filter_by(id=post_id).delete()
+    post = Post.query.filter_by(id=post_id)
+    db.session.delete(post)
     db.session.commit()
     return redirect('/posts')
 
