@@ -78,6 +78,17 @@ def load_new_user_form():
 def load_edit_user_form(user_id):
     """load the edit-or-new-user form sending an user to edit"""
     user = User.query.get_or_404(user_id)
+    user_statment = user.statement
+    statement_test = ""
+    print(f'>>>>>>>>>>>>>>>> {statement_test} >>>>>> {user.statement}')
+
+    for i in range(4):
+        statment_test += user_statement[i]
+        print(f'>>>>>>>>>>>>>>>> {statement_test} in loop {i}')
+    if statement_test == "None":
+        user.statement = False
+    print(f'>>>>>>>>>>>>>>>> {statement_test} >>>>>> {user.statement}')
+
     return render_template('edit-user.html', user=user)
 
 @app.route('/new-user', methods=['POST'])

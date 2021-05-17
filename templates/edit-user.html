@@ -44,8 +44,7 @@
               <textarea 
                 class="form-control dark-input" 
                 name="statement" id="statement" rows="5" 
-                placeholder="a little something something about you">{{ user.statement }}
-              </textarea>
+                placeholder="a little something something about you">{% if user.statement %}{{ user.statement }}{% endif %}</textarea>
             </div>
           </div>
         </div>
