@@ -31,7 +31,7 @@ class User(db.Model):
     statement_short = db.Column(db.String(42))
     full_name = db.Column(db.String(41))
 
-    posts = db.relationship("Post", backref="user", cascade="all, delete")
+    posts = db.relationship("Post", backref="user", cascade="all, delete-orphan")
 
 
     @property
@@ -53,22 +53,22 @@ class Post(db.Model):
     id = db.Column(db.Integer,
                 primary_key=True,
                 autoincrement=True)
-    title = db.Column(db.String(50), 
+    title = db.Column(db.String(50),
                 default="blog-like post")
     content = db.Column(db.Text,
                 nullable=False)
-    content_medium = db.Column(db.String(222), 
+    content_medium = db.Column(db.String(222),
                 nullable=False)
-    content_short = db.Column(db.String(42), 
+    content_short = db.Column(db.String(42),
                 nullable=False)
     created_on = db.Column(db.DateTime,
                 default=datetime.utcnow(),
                 nullable=False)
-    user_id = db.Column(db.Integer, 
+    user_id = db.Column(db.Integer,
                 db.ForeignKey('users.id'))
     pretified_creation_datetime = db.Column(db.String(31), default="")
 
-    posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")
+    # posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
 
@@ -102,7 +102,7 @@ class Tag(db.Model):
 
     id = db.Column(db.Integer,
                 primary_key = True,
-                auto_increment = True)
+                autoincrement = True)
     tag = db.Column(db.String(26),
                 nullable=False,
                 unique=True)
@@ -111,13 +111,22 @@ class Tag(db.Model):
     posts = db.relationship(
         'Post',
         secondary="posts_tags",
-        cascade="all,delete",
+        # cascade="all,delete",
         backref="tags",
     )
 
 class PostTag(db.Model):
     """many-to-many reference matching tags with posts"""
     __tablename__ = "posts_tags"
+
+    post_id = db.Column(db.Integer,
+                        db.ForeignKey('posts.id'),
+                        primary_key=True)
+    tag_id = db.Column(db.Integer,
+                   db.ForeignKey('tags.id'),
+                   primary_key=True)
+
+    # primary_key = (post_id, tag_id)
 
     def __repr__ (self):
         """show the references"""
@@ -158,12 +167,3 @@ class PostTag(db.Model):
         for post in posts:
             tags_keyed_to_post.append({post: cls.get_tags_for_post(post)})
         return tags_keyed_to_post
-
-    post_id = db.Column(db.Integer,
-                db.ForeignKey('posts.id'),
-                primary_key=True)
-    tag_id = db.Column(db.Integer,
-                db.ForeignKey('tags.id'),
-                primary_key=True)
-
-    primary_key = (post_id, tag_id)

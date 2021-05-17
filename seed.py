@@ -3,6 +3,9 @@ from app import app
 from helpers import generate_preview
 from datetime import datetime
 
+app.config['TESTING'] = True
+app.config['DEBUG_TB_HOSTS'] = ['dont-show-debug-toolbar']
+
 # Create all tables
 db.drop_all()
 db.create_all()

@@ -7,7 +7,12 @@ from datetime import datetime
 from helpers import generate_preview
 
 app = Flask(__name__)
+
 app.config['SECRET_KEY'] = "bigfuckinsecret230las@1!"
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
+debug = DebugToolbarExtension(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///bloglilly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
@@ -159,6 +164,9 @@ def edit_a_post(post_id):
     post = Post.query.get(post_id)
     user = User.query.get(post.user_id)
     tags = Tag.query.all()
+    # reset any old values for Tag.this_post_has
+    for tag in tags:
+        tag.this_post_has = False
     post_tags = PostTag.get_tags_for_post(post)
     for post_tag in post_tags: 
         post_tag.this_post_has = True
@@ -170,11 +178,12 @@ def edit_a_post(post_id):
 @app.route('/post/<int:post_id>/edited', methods=['POST'])
 def process_edited_post_and_display(post_id):
     """process an edited post, place the edits in the database entry, and display that post via post.html"""
-    
+
     # gather the form data
     edited_title = request.form['title']
     edited_content = request.form['content']
     tag_ids = [int(num) for num in request.form.getlist("tags")]
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
     # get the old post up in this joint
@@ -184,14 +193,12 @@ def process_edited_post_and_display(post_id):
     # now update the edited values:
     edited_post.title = edited_title
     edited_post.content = edited_content
-    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
     # tags is an empty list no matter what was checked on edit page
 
     db.session.add(edited_post)
     db.session.commit()
 
-    # TODO: these tags still aren't working
-    # showing up on page, but not sticking in database
+    # TODO: tags are showing up on page, but not sticking in database
     post_tags = PostTag.query.filter(PostTag.post_id == post_id)
     add_post_tags = []
     for post_tag in post_tags:
@@ -210,7 +217,7 @@ def process_edited_post_and_display(post_id):
         tag.this_post_has = False
 
     db.session.add_all(tags)
-    db.commit()
+    db.session.commit()
     # re_got_tag_ids = PostTag.query.filter(PostTag.post_id == post_id).all()
     # re_got_tags = []
     # for tag_id in re_got_tag_ids:
@@ -317,7 +324,7 @@ def process_edit_tag_form(tag_id):
     
     tag_to_edit.tag = request.args['tag']
     db.session.add(tag_to_edit)
-    db.commit()
+    db.session.commit()
     # go back to list of tags
     return redirect("/tags")
 
