@@ -65,7 +65,8 @@ class Post(db.Model):
                 default=datetime.utcnow(),
                 nullable=False)
     user_id = db.Column(db.Integer,
-                db.ForeignKey('users.id'))
+                db.ForeignKey('users.id'), 
+                nullable=False)
     pretified_creation_datetime = db.Column(db.String(31), default="")
 
     # posts_tags = db.relationship("PostTag", backref="post", cascade="all, delete")

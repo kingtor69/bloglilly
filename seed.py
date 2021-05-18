@@ -31,7 +31,6 @@ seed_posts = [
     Post(title="literary geniuses", content="I'm so fortunate to be here with so many literary geniuses. The conversation is scinilating. Now if you'll excuse me, I'm going to go get more heroin.", user_id="4"), 
     Post(title="bro country", content="hey, bro, pass me a bud, would ya?", user_id = "3"), 
     Post(title="speechless", content="Right? I thought there was some literary value in this site. I've only been here for a few minutes, and I'm bored.", user_id="2"), 
-    Post(content="Hey, guys? What's a bloglilly?"), 
     Post(title="Anyone else hungry?", content="I'm really hungry guys. I might start whining and running in circles.", user_id="5"), 
     Post(title="Seriously", content="Are you guys listening? Have you not noticing my whining and my running around in circles? Whine, run, stop, whine, run, stop, whine, run, stop...", user_id="5")]
 
@@ -45,9 +44,12 @@ seed_tags = [
 seed_posts_tags = [
     PostTag(post_id=2, tag_id=3),
     PostTag(post_id=3, tag_id=2),
+    PostTag(post_id=8, tag_id=1),
     PostTag(post_id=9, tag_id=1),
-    PostTag(post_id=10, tag_id=1),
-    PostTag(post_id=5, tag_id=4)
+    PostTag(post_id=5, tag_id=4),
+    PostTag(post_id=6, tag_id=2),
+    PostTag(post_id=6, tag_id=3),
+    PostTag(post_id=6, tag_id=1)
     ]
 
 # get preview statements to put in database:
