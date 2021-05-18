@@ -39,8 +39,8 @@ def display_homepage():
 def display_user_list():
     """display a list of all users"""
     users = User.query.all()
-    # this is a many to many idea for future improvement with a UserPost model
-    # most_recent_posts = Post.query.order_by(Post.created_on).desc().all()
+    # this is a many to many idea for future improvement with a UserPost model: 
+    # lastest_post = Post.query.order_by(Post.created_on).desc().first()
     return render_template('users.html', users=users)
 # future TODO: make this users/0 which shows 20 users -- then users/1 is offset by 20, &c.
 
@@ -127,10 +127,9 @@ def edited_user_to_database(user_id):
 
     return redirect(f'../user/{user.id}')
 
-# TODO: delete is violating a constraint on table posts or some shit like that
 @app.route('/delete-user/<int:user_id>')
 def delete_this_user(user_id):
-    user = User.query.filter_by(id=user_id)
+    user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
     return redirect('/users')
@@ -186,7 +185,7 @@ def edit_a_post(post_id):
     db.session.commit()
     return render_template('edit-post.html', post=post, tags=tags, user=user)
 
-# TODO tags aren't getting in the database
+# TODO now ALL the tags appear no matter what was checked, but no change in the database **sigh**
 @app.route('/post/<int:post_id>/edited', methods=['POST'])
 def process_edited_post_and_display(post_id):
     """process an edited post, place the edits in the database entry, and display that post via post.html"""
@@ -194,8 +193,8 @@ def process_edited_post_and_display(post_id):
     # gather the form data
     edited_title = request.form['title']
     edited_content = request.form['content']
-    tag_ids = [int(num) for num in request.form.getlist("tags")]
-    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+    form_tag_ids = [int(num) for num in request.form.getlist("tags")]
+    form_tags = Tag.query.filter(Tag.id.in_(form_tag_ids)).all()
 
     # future development TODO: add an updated_datetime and an 'edited' flag...?
     # get the old post up in this joint
@@ -210,32 +209,57 @@ def process_edited_post_and_display(post_id):
     db.session.add(edited_post)
     db.session.commit()
 
-    # TODO: tags are showing up on page, but not sticking in database
+    # first clean out the posts_tags from this post (called post_tags below)
     post_tags = PostTag.query.filter(PostTag.post_id == post_id)
-    add_post_tags = []
     for post_tag in post_tags:
-        for tag in tags:
-            if not post_tag == tag.id:
-                add_post_tags.append(PostTag(post_id = post_id, tag_id = tag.id))
-
-    db.session.add_all(add_post_tags)
-    # re TODO: I tried the below and it made 0 difference
-    # db.session.add_all(tags)
+        db.session.delete(post_tag)
     db.session.commit()
+    # not sure if the following is necessary, but it's not hurting anyone, is it?
+    post_tags = []
+
+    # now make posts_tags rows for each tag checked in the form:
+    for form_tag_id in form_tag_ids:
+        post_tags.append(PostTag(post_id = post_id, tag_id = form_tag_id))
+    db.session.add_all(post_tags)
+    db.session.commit()
+
+
+    # post_tags_ids=[]
+    # for post_tag in post_tags:
+    #     post_tags_ids.append(post_tag.tag_id)
+
+    # add_post_tags=[]
+    # go_time = False
+    # for tag in tags:
+    #     if post_tags_ids.count(tag.id) == 0:
+    #         add_post_tags.append(PostTag(post_id = post_id, tag_id = tag.id))
+    #         go_time = True
+    
+    # Above got new tags committed to database, but failed on committing deleted tags
+    # below if an aborted attempt to fix that
+    # for post_tag_id in post_tag_ids:
+    #     if tag_ids.count(post_tag_id) > 0
+
+    # and here's take 2:
+
+    
+    # if go_time:
+    #     db.session.add_all(add_post_tags)
+    #     db.session.commit()
 
     # reset Tag.this_post_has to default on all tags:
-    tags = Tag.query.all()
-    for tag in tags:
-        tag.this_post_has = False
+    # tags = Tag.query.all()
+    # for tag in tags:
+    #     tag.this_post_has = False
 
-    db.session.add_all(tags)
-    db.session.commit()
+    # db.session.add_all(tags)
+    # db.session.commit()
     # re_got_tag_ids = PostTag.query.filter(PostTag.post_id == post_id).all()
     # re_got_tags = []
     # for tag_id in re_got_tag_ids:
     #     re_got_tags.append(Tag.query.get(id))
 
-    return render_template('post.html', post=edited_post, tags=tags, user=user)
+    return render_template('post.html', post=edited_post, tags=form_tags, user=user)
 
 @app.route('/post/<int:post_id>')
 def display_post_by_id(post_id):
@@ -261,10 +285,9 @@ def display_all_posts():
 
     return render_template('posts.html', posts_keying_tags=posts_keying_tags)
 
-# TODO: this throws and error, I think that delete thing got lost moving to/from studio...?
 @app.route('/delete-post/<int:post_id>')
 def delete_specified_post(post_id):
-    post = Post.query.filter_by(id=post_id)
+    post = Post.query.get_or_404(post_id)
     db.session.delete(post)
     db.session.commit()
     return redirect('/posts')
@@ -379,10 +402,3 @@ def page_not_found(e):
     flash('That page was not found. Please try again.', 'danger')
 
     return redirect('/')
-
-# TODO: improve taggibility to edited posts
-    # currently they lose all tags when the edit page opens
-    # need logic both here and in template to pre-check pre-existing tags on a past
-
-# fixed? untested
-# TODO: what happens to posts when user is deleted

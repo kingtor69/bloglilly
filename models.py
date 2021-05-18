@@ -107,7 +107,7 @@ class Tag(db.Model):
     tag = db.Column(db.String(26),
                 nullable=False,
                 unique=True)
-    this_post_has = db.Column(db.Boolean, default=False)
+    # this_post_has = db.Column(db.Boolean, default=False)
 
     posts = db.relationship(
         'Post',

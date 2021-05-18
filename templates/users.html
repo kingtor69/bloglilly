@@ -16,17 +16,22 @@
         <tr>
           <th>poster</th>
           <th>statement</th>
-          <th></th>
           <!-- <th>most recent post</th> -->
         </tr>
       </thead>
       {% for user in users %}
         <tr>  
           <td><a href="./user/{{user.id}}">{{user.full_name}}</a></td>
-          <td colspan="2">{{user.statement_medium}}</td>
-          <!-- 
-            <td><i>anchor button to posts by user</i></td>
-            <td><i>most recent post will be here</i></td> -->
+          {% if user.statement_medium %}
+            <td colspan="2">{{user.statement_medium}}</td>
+          {% else %}
+            <td></td>
+          {% endif %}
+          <!-- {% if latest_post %}
+            <td><a href="../post/{{latest_post.id}}"><i>most recent post title</i></a></td>
+          {% else %} -->
+            <td></td>
+          <!-- {% endif %} -->
         </tr>
       {% endfor %}
     </table>
