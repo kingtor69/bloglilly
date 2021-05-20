@@ -7,6 +7,7 @@
 which I called BlogLilly as a typo and decided to keep it
 
 ### how it works:
+ - **SQLAlchemy will be looking for a database called /bloglilly/**
  - there is no log-in or authentication, so anyone can post on behalf of anyone else, edit all users, delete users, add users, etc.
  - aside from that, I think it's fairly self-explanatory
 
